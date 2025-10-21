@@ -1,0 +1,87 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    tools:context=".QuizActivity"
+    android:background="@drawable/bgop1"
+    android:backgroundTintMode="multiply"
+    android:backgroundTint="@color/material_dynamic_neutral90">
+
+    <!-- Progress Label -->
+    <TextView
+        android:id="@+id/progressLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0%"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        android:layout_gravity="end"
+        android:layout_marginBottom="8dp"/>
+
+    <!-- Progress Bar -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:progress="0"
+        android:max="100"
+        android:progressTint="@color/pomegranate"
+        android:layout_marginBottom="24dp"/>
+
+    <!-- Question Text -->
+    <TextView
+        android:id="@+id/questionText"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:text="Mire szeretnéd a teát?"
+        android:textSize="28sp"
+        android:textAlignment="center"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        android:layout_marginTop="35dp"/>
+    <TextView
+        android:id="@+id/opcio3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="(max 3 opció)"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textAlignment="center"
+        />
+
+    <!-- Scrollable options container -->
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:overScrollMode="ifContentScrolls"
+        android:layout_marginBottom="16dp">
+
+        <LinearLayout
+            android:id="@+id/optionsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:divider="?android:dividerHorizontal"
+            android:showDividers="middle"
+            android:dividerPadding="16dp">
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Next Button -->
+    <Button
+        android:id="@+id/nextButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Next"
+        android:enabled="false"
+        android:backgroundTint="@color/pomegranate"
+        android:textColor="@android:color/white"/>
+</LinearLayout>

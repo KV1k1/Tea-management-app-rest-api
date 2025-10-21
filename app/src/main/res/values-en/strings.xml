@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">Tea Brewing</string>
+
+    <!-- Buttons -->
+    <string name="language_button">Language</string>
+    <string name="quiz_button">Take the Quiz</string>
+    <string name="brewing_button">Choose a Tea</string>
+
+    <!-- Titles -->
+    <string name="main_title">Tea Time</string>
+    <string name="main_subtitle">Sip, sip, hooray! It’s tea time.</string>
+
+    <!-- Tea Quiz Card -->
+    <string name="quiz_card_title">📝 Tea Quiz</string>
+    <string name="quiz_card_description">
+        Not sure which tea to start with? Take the quiz and find out which tea matches your mood the best!
+    </string>
+    <string name="quiz_start">Take the quiz</string>
+
+    <!-- Tea Brewing Card -->
+    <string name="brew_card_title">🍃 Tea Brewing</string>
+    <string name="brew_card_description">
+        Already have a favorite? Pick a tea and we’ll help you brew it perfectly every time with our built-in timer!
+    </string>
+    <string name="brew_start">Choose a tea</string>
+
+    <!-- Language dialog -->
+    <string name="dialog_title">Choose language</string>
+    <string name="dialog_hungarian">Hungarian</string>
+    <string name="dialog_english">English</string>
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_cancel">Cancel</string>
+</resources>

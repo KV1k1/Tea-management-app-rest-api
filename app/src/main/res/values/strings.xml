@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">Tea Főzés</string>
+
+    <!-- Buttons -->
+    <string name="language_button">Nyelv</string>
+    <string name="quiz_button">Kvíz kitöltése</string>
+    <string name="brewing_button">Válassz teát</string>
+
+    <!-- Titles -->
+    <string name="main_title">Tea Time</string>
+    <string name="main_subtitle">Hurrá! Itt a teaidő.</string>
+
+    <!-- Tea Quiz Card -->
+    <string name="quiz_card_title">📝 Tea Kvíz</string>
+    <string name="quiz_card_description">
+        Nem tudod, melyik teával kezdj? Töltsd ki a kvízt, és megtudod, melyik tea illik leginkább a hangulatodhoz!
+    </string>
+    <string name="quiz_start">Kvíz kitöltése</string>
+
+    <!-- Tea Brewing Card -->
+    <string name="brew_card_title">🍃 Teafőzés</string>
+    <string name="brew_card_description">
+        Már van kedvenced? Válassz egy teát, és segítünk, hogy mindig tökéletesre főzd, a beépített időzítőnkkel!
+    </string>
+    <string name="brew_start">Teafőzés</string>
+
+    <!-- Language dialog -->
+    <string name="dialog_title">Válassz nyelvet</string>
+    <string name="dialog_hungarian">Magyar</string>
+    <string name="dialog_english">Angol</string>
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_cancel">Mégse</string>
+</resources>
