@@ -1,9 +1,22 @@
 <resources>
+    <string name="acc_maker">Felhasználó létrehozása</string>
+    <string name="join">Csatlakozz a tea ivókhoz!</string>
+    <string name="sign_in">Már van felhasználód? Jelentkezz be!</string>
+
+    <string name="welcome">Üdvözlünk!</string>
+    <string name="log_in">Jelenkezz be a folytatáshoz!</string>
+
+    <string name="loggingin">Bejelentkezés</string>
+
+    <string name="no_acc">Nincs fiókod? Regisztrálj!</string>
+
     <string name="app_name">Tea Főzés</string>
+
+    <string name="backbut">Vissza</string>
 
     <!-- Buttons -->
     <string name="language_button">Nyelv</string>
-    <string name="logout_button">Kijelentkezés</string>
+    <string name="logout_button">Kijelentkez</string>
     <string name="quiz_button">Kvíz kitöltése</string>
     <string name="brewing_button">Válassz teát</string>
 
@@ -31,4 +44,119 @@
     <string name="dialog_english">Angol</string>
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Mégse</string>
+
+    <!-- Admin/Quiz dialog titles -->
+    <string name="title_select_purposes">Válassz hatásokat</string>
+    <string name="title_select_flavors">Válassz ízeket</string>
+    <string name="title_select_daytimes">Válaszd ki az időpontokat</string>
+
+    <!-- Quiz question texts -->
+    <string name="choose_tea">Válassz egy teát</string>
+
+    <string name="q_purpose">Milyen hatást szeretnél?</string>
+    <string name="q_flavor">Milyen ízvilágot keresel?</string>
+    <string name="q_daytime">Mikor fogod inni?</string>
+
+    <!-- Display arrays (localized) -->
+    <string-array name="purpose_options">
+        <item>Élénkítő</item>
+        <item>Emésztés</item>
+        <item>Nyugtató</item>
+        <item>Gyulladáscsökkentő</item>
+        <item>Immunitás</item>
+        <item>Stresszoldó</item>
+        <item>Bőrbarát</item>
+        <item>Antioxidáns</item>
+    </string-array>
+    <string-array name="flavor_options">
+        <item>Gyümölcsös</item>
+        <item>Virágos</item>
+        <item>Friss</item>
+        <item>Lágy</item>
+        <item>Fanyar</item>
+        <item>Édeskés</item>
+        <item>Gazdag</item>
+        <item>Mentolos</item>
+    </string-array>
+    <string-array name="daytime_options">
+        <item>Reggel</item>
+        <item>Délelőtt</item>
+        <item>Délután</item>
+        <item>Étkezés után</item>
+        <item>Este</item>
+    </string-array>
+
+    <!-- English display arrays (used when lang = en) -->
+    <string-array name="purpose_options_en">
+        <item>Energizing</item>
+        <item>Digestion</item>
+        <item>Calming</item>
+        <item>Anti-inflammatory</item>
+        <item>Immunity</item>
+        <item>Stress relief</item>
+        <item>Skin-friendly</item>
+        <item>Antioxidant</item>
+    </string-array>
+    <string-array name="flavor_options_en">
+        <item>Fruity</item>
+        <item>Floral</item>
+        <item>Fresh</item>
+        <item>Soft</item>
+        <item>Tart</item>
+        <item>Sweetish</item>
+        <item>Rich</item>
+        <item>Minty</item>
+    </string-array>
+    <string-array name="daytime_options_en">
+        <item>Morning</item>
+        <item>Forenoon</item>
+        <item>Afternoon</item>
+        <item>After meal</item>
+        <item>Evening</item>
+    </string-array>
+
+    <!-- Canonical HU arrays (used for storage/matching) -->
+    <string-array name="purpose_options_hu">
+        <item>Élénkítő</item>
+        <item>Emésztés</item>
+        <item>Nyugtató</item>
+        <item>Gyulladáscsökkentő</item>
+        <item>Immunitás</item>
+        <item>Stresszoldó</item>
+        <item>Bőrbarát</item>
+        <item>Antioxidáns</item>
+    </string-array>
+    <string-array name="flavor_options_hu">
+        <item>Gyümölcsös</item>
+        <item>Virágos</item>
+        <item>Friss</item>
+        <item>Lágy</item>
+        <item>Fanyar</item>
+        <item>Édeskés</item>
+        <item>Gazdag</item>
+        <item>Mentolos</item>
+    </string-array>
+    <string-array name="daytime_options_hu">
+        <item>Reggel</item>
+        <item>Délelőtt</item>
+        <item>Délután</item>
+        <item>Étkezés után</item>
+        <item>Este</item>
+    </string-array>
+
+    <!-- Countdown/Details labels (HU) -->
+    <string name="label_purpose">Amire jó</string>
+    <string name="label_flavor">Ízvilág</string>
+    <string name="label_daytime">Legjobb fogyasztási idő</string>
+    <string name="label_reco_temp">Ajánlott hőfok</string>
+    <string name="label_tip">Fogyasztási tipp</string>
+    <string name="btn_start_brewing">Teafőzés indítása</string>
+    <string name="btn_running">Fut...</string>
+    <string name="btn_resume">Folytatás</string>
+    <string name="timer_done">Kész!</string>
+    <string name="toast_enjoy">Egészségedre! &#x1F375;</string>
+    
+    <!-- Recommendation messages (HU) -->
+    <string name="your_tea">A teád</string>
+    <string name="no_match">Nem találtunk megfelelő teát a választásaid alapján.</string>
 </resources>

@@ -28,10 +28,36 @@
             android:layout_marginBottom="8dp">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etTeaNameEn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Tea Name (English)"
+                android:maxLines="1" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp">
+
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Description"
+                android:maxLines="3" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etDescriptionEn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Description (English)"
                 android:maxLines="3" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -48,6 +74,19 @@
                 android:maxLines="3" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etRecommendationEn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Recommendation (English)"
+                android:maxLines="3" />
+        </com.google.android.material.textfield.TextInputLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -57,8 +96,8 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginEnd="8dp">
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etBrewTime"
@@ -72,8 +111,8 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="8dp">
+                android:layout_marginStart="8dp"
+                android:layout_weight="1">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etWaterTemp"

@@ -83,7 +83,7 @@ public class AdminTeaManagementActivity extends AppCompatActivity {
     private void loadAllTeas() {
         String token = tokenManager.getToken();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://10.0.2.2:8080/")
+                .baseUrl("http://192.168.1.196:8080")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -128,22 +128,28 @@ public class AdminTeaManagementActivity extends AppCompatActivity {
         builder.setView(dialogView);
 
         EditText etName = dialogView.findViewById(R.id.etTeaName);
+        EditText etNameEn = dialogView.findViewById(R.id.etTeaNameEn);
         EditText etDescription = dialogView.findViewById(R.id.etDescription);
+        EditText etDescriptionEn = dialogView.findViewById(R.id.etDescriptionEn);
         EditText etRecommendation = dialogView.findViewById(R.id.etRecommendation);
+        EditText etRecommendationEn = dialogView.findViewById(R.id.etRecommendationEn);
         EditText etBrewTime = dialogView.findViewById(R.id.etBrewTime);
         EditText etWaterTemp = dialogView.findViewById(R.id.etWaterTemp);
         EditText etFlavors = dialogView.findViewById(R.id.etFlavors);
         EditText etPurposes = dialogView.findViewById(R.id.etPurposes);
         EditText etDayTimes = dialogView.findViewById(R.id.etDayTimes);
 
-        setupMultiSelectField(etPurposes, "Válassz hatásokat", PURPOSE_OPTIONS);
-        setupMultiSelectField(etFlavors, "Válassz ízeket", FLAVOR_OPTIONS);
-        setupMultiSelectField(etDayTimes, "Válaszd ki az időpontokat", DAYTIME_OPTIONS);
+        setupMultiSelectField(etPurposes, getString(R.string.title_select_purposes), getResources().getStringArray(R.array.purpose_options));
+        setupMultiSelectField(etFlavors, getString(R.string.title_select_flavors), getResources().getStringArray(R.array.flavor_options));
+        setupMultiSelectField(etDayTimes, getString(R.string.title_select_daytimes), getResources().getStringArray(R.array.daytime_options));
 
         builder.setPositiveButton("Add", (dialog, which) -> {
             String name = etName.getText().toString().trim();
+            String nameEn = etNameEn.getText().toString().trim();
             String description = etDescription.getText().toString().trim();
+            String descriptionEn = etDescriptionEn.getText().toString().trim();
             String recommendation = etRecommendation.getText().toString().trim();
+            String recommendationEn = etRecommendationEn.getText().toString().trim();
             String brewTimeStr = etBrewTime.getText().toString().trim();
             String waterTempStr = etWaterTemp.getText().toString().trim();
 
@@ -158,8 +164,11 @@ public class AdminTeaManagementActivity extends AppCompatActivity {
 
                 Tea tea = new Tea();
                 tea.setName(name);
+                tea.setNameEn(nameEn);
                 tea.setDescription(description);
+                tea.setDescriptionEn(descriptionEn);
                 tea.setRecommendation(recommendation);
+                tea.setRecommendationEn(recommendationEn);
                 tea.setBrewTime(brewTime);
                 tea.setWaterTemp(waterTemp);
                 tea.setFlavor(parseCommaSeparated(etFlavors.getText().toString()));
@@ -185,8 +194,11 @@ public class AdminTeaManagementActivity extends AppCompatActivity {
         builder.setView(dialogView);
 
         EditText etName = dialogView.findViewById(R.id.etTeaName);
+        EditText etNameEn = dialogView.findViewById(R.id.etTeaNameEn);
         EditText etDescription = dialogView.findViewById(R.id.etDescription);
+        EditText etDescriptionEn = dialogView.findViewById(R.id.etDescriptionEn);
         EditText etRecommendation = dialogView.findViewById(R.id.etRecommendation);
+        EditText etRecommendationEn = dialogView.findViewById(R.id.etRecommendationEn);
         EditText etBrewTime = dialogView.findViewById(R.id.etBrewTime);
         EditText etWaterTemp = dialogView.findViewById(R.id.etWaterTemp);
         EditText etFlavors = dialogView.findViewById(R.id.etFlavors);
@@ -195,22 +207,28 @@ public class AdminTeaManagementActivity extends AppCompatActivity {
 
         // Pre-fill with existing data
         etName.setText(tea.getName());
+        etNameEn.setText(tea.getNameEn());
         etDescription.setText(tea.getDescription());
+        etDescriptionEn.setText(tea.getDescriptionEn());
         etRecommendation.setText(tea.getRecommendation());
+        etRecommendationEn.setText(tea.getRecommendationEn());
         etBrewTime.setText(String.valueOf(tea.getBrewTime()));
         etWaterTemp.setText(String.valueOf(tea.getWaterTemp()));
         etFlavors.setText(listToCommaSeparated(tea.getFlavor()));
         etPurposes.setText(listToCommaSeparated(tea.getPurpose()));
         etDayTimes.setText(listToCommaSeparated(tea.getDayTime()));
 
-        setupMultiSelectField(etPurposes, "Válassz hatásokat", PURPOSE_OPTIONS);
-        setupMultiSelectField(etFlavors, "Válassz ízeket", FLAVOR_OPTIONS);
-        setupMultiSelectField(etDayTimes, "Válaszd ki az időpontokat", DAYTIME_OPTIONS);
+        setupMultiSelectField(etPurposes, getString(R.string.title_select_purposes), getResources().getStringArray(R.array.purpose_options));
+        setupMultiSelectField(etFlavors, getString(R.string.title_select_flavors), getResources().getStringArray(R.array.flavor_options));
+        setupMultiSelectField(etDayTimes, getString(R.string.title_select_daytimes), getResources().getStringArray(R.array.daytime_options));
 
         builder.setPositiveButton("Update", (dialog, which) -> {
             String name = etName.getText().toString().trim();
+            String nameEn = etNameEn.getText().toString().trim();
             String description = etDescription.getText().toString().trim();
+            String descriptionEn = etDescriptionEn.getText().toString().trim();
             String recommendation = etRecommendation.getText().toString().trim();
+            String recommendationEn = etRecommendationEn.getText().toString().trim();
             String brewTimeStr = etBrewTime.getText().toString().trim();
             String waterTempStr = etWaterTemp.getText().toString().trim();
 
@@ -225,8 +243,11 @@ public class AdminTeaManagementActivity extends AppCompatActivity {
 
                 Tea updatedTea = new Tea();
                 updatedTea.setName(name);
+                updatedTea.setNameEn(nameEn);
                 updatedTea.setDescription(description);
+                updatedTea.setDescriptionEn(descriptionEn);
                 updatedTea.setRecommendation(recommendation);
+                updatedTea.setRecommendationEn(recommendationEn);
                 updatedTea.setBrewTime(brewTime);
                 updatedTea.setWaterTemp(waterTemp);
                 updatedTea.setFlavor(parseCommaSeparated(etFlavors.getText().toString()));
@@ -256,7 +277,7 @@ public class AdminTeaManagementActivity extends AppCompatActivity {
     private void createTea(Tea tea) {
         String token = tokenManager.getToken();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://10.0.2.2:8080/")
+                .baseUrl("http://192.168.1.196:8080/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -294,7 +315,7 @@ public class AdminTeaManagementActivity extends AppCompatActivity {
     private void updateTea(long teaId, Tea tea) {
         String token = tokenManager.getToken();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://10.0.2.2:8080/")
+                .baseUrl("http://192.168.1.196:8080/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -332,7 +353,7 @@ public class AdminTeaManagementActivity extends AppCompatActivity {
     private void deleteTea(long teaId) {
         String token = tokenManager.getToken();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://10.0.2.2:8080/")
+                .baseUrl("http://192.168.1.196:8080/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -388,18 +409,10 @@ public class AdminTeaManagementActivity extends AppCompatActivity {
         return sb.toString();
     }
 
-    // Fixed option sets to align with QuizActivity filters
-    private static final String[] PURPOSE_OPTIONS = new String[]{
-            "Élénkítő", "Emésztés", "Nyugtató", "Gyulladáscsökkentő",
-            "Immunitás", "Stresszoldó", "Bőrbarát", "Antioxidáns"
-    };
-    private static final String[] FLAVOR_OPTIONS = new String[]{
-            "Gyümölcsös", "Virágos", "Friss", "Lágy",
-            "Fanyar", "Édeskés", "Gazdag", "Mentolos"
-    };
-    private static final String[] DAYTIME_OPTIONS = new String[]{
-            "Reggel", "Délelőtt", "Délután", "Étkezés után", "Este"
-    };
+    // Helper to load canonical HU arrays
+    private String[] PURPOSE_OPTIONS_HU() { return getResources().getStringArray(R.array.purpose_options_hu); }
+    private String[] FLAVOR_OPTIONS_HU()  { return getResources().getStringArray(R.array.flavor_options_hu); }
+    private String[] DAYTIME_OPTIONS_HU() { return getResources().getStringArray(R.array.daytime_options_hu); }
 
     private void setupMultiSelectField(EditText target, String title, String[] options) {
         // Make field read-only and clickable
@@ -411,31 +424,57 @@ public class AdminTeaManagementActivity extends AppCompatActivity {
         target.setOnClickListener(v -> showMultiSelectDialog(target, title, options));
     }
 
-    private void showMultiSelectDialog(EditText target, String title, String[] options) {
-        // Preselect based on current field value
-        List<String> current = parseCommaSeparated(target.getText() != null ? target.getText().toString() : "");
-        boolean[] checked = new boolean[options.length];
-        for (int i = 0; i < options.length; i++) {
-            final String opt = options[i];
-            checked[i] = current.stream().anyMatch(s -> s.equalsIgnoreCase(opt));
+    private void showMultiSelectDialog(EditText target, String title, String[] displayOptions) {
+        // Determine which category this field represents and get canonical HU arrays
+        String[] canonicalHU;
+        if (target.getId() == R.id.etPurposes) {
+            canonicalHU = PURPOSE_OPTIONS_HU();
+        } else if (target.getId() == R.id.etFlavors) {
+            canonicalHU = FLAVOR_OPTIONS_HU();
+        } else { // etDayTimes
+            canonicalHU = DAYTIME_OPTIONS_HU();
         }
 
-        List<String> selected = new ArrayList<>(current);
+        // Build mapping index between display and canonical HU by position
+        // Preselect based on current field value (stored as HU canonical)
+        List<String> currentHU = parseCommaSeparated(target.getText() != null ? target.getText().toString() : "");
+        // Convert current HU to display for checked[] toggle
+        boolean[] checked = new boolean[displayOptions.length];
+        for (int i = 0; i < displayOptions.length; i++) {
+            final String hu = canonicalHU[i];
+            checked[i] = currentHU.stream().anyMatch(s -> s.equalsIgnoreCase(hu));
+        }
+
+        // Start selected list as display labels based on current HU set
+        List<String> selectedDisplay = new ArrayList<>();
+        for (int i = 0; i < displayOptions.length; i++) {
+            if (checked[i]) selectedDisplay.add(displayOptions[i]);
+        }
 
         new AlertDialog.Builder(this)
                 .setTitle(title)
-                .setMultiChoiceItems(options, checked, (dialog, which, isChecked) -> {
-                    String value = options[which];
+                .setMultiChoiceItems(displayOptions, checked, (dialog, which, isChecked) -> {
+                    String value = displayOptions[which];
                     if (isChecked) {
-                        if (selected.stream().noneMatch(s -> s.equalsIgnoreCase(value))) {
-                            selected.add(value);
+                        if (selectedDisplay.stream().noneMatch(s -> s.equalsIgnoreCase(value))) {
+                            selectedDisplay.add(value);
                         }
                     } else {
-                        selected.removeIf(s -> s.equalsIgnoreCase(value));
+                        selectedDisplay.removeIf(s -> s.equalsIgnoreCase(value));
                     }
                 })
-                .setPositiveButton("OK", (dialog, which) -> target.setText(listToCommaSeparated(selected)))
-                .setNegativeButton("Mégse", null)
+                .setPositiveButton(getString(R.string.dialog_ok), (dialog, which) -> {
+                    // Map selected display labels back to canonical HU by index
+                    List<String> selectedHU = new ArrayList<>();
+                    for (int i = 0; i < displayOptions.length; i++) {
+                        String disp = displayOptions[i];
+                        if (selectedDisplay.stream().anyMatch(s -> s.equalsIgnoreCase(disp))) {
+                            selectedHU.add(canonicalHU[i]);
+                        }
+                    }
+                    target.setText(listToCommaSeparated(selectedHU));
+                })
+                .setNegativeButton(getString(R.string.dialog_cancel), null)
                 .show();
     }
 }

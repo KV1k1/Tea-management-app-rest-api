@@ -16,7 +16,7 @@
         android:backgroundTint="@color/material_dynamic_neutral80">
 
         <TextView
-            android:text="Válassz egy teát"
+            android:text="@string/choose_tea"
             android:textSize="24sp"
             android:textStyle="bold"
             android:textAlignment="center"

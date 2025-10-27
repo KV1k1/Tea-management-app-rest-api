@@ -35,6 +35,7 @@ public class RecommendationActivity extends AppCompatActivity {
     private ImageView teaProg;
 
     private ArrayList<Tea> teaList = new ArrayList<>();
+    private boolean isEnglish; // cached per activity instance
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +55,9 @@ public class RecommendationActivity extends AppCompatActivity {
         teaProg = findViewById(R.id.teaProg);
         loadingBar = findViewById(R.id.loadingBar);
         loadingText = findViewById(R.id.loadingText);
+
+        isEnglish = getSharedPreferences("settings", MODE_PRIVATE)
+                .getString("lang", "hu").equalsIgnoreCase("en");
 
         startTimerBtn.setVisibility(View.GONE);
 
@@ -89,7 +93,7 @@ public class RecommendationActivity extends AppCompatActivity {
 
         // Replace with your PC or server IP
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://10.0.2.2:8080/") // <-- your Quarkus backend IP
+                .baseUrl("http://192.168.1.196:8080/") // <-- your Quarkus backend IP
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -159,17 +163,25 @@ public class RecommendationActivity extends AppCompatActivity {
         }
 
         if (bestTea != null) {
-            resultText.setText("A teád: " + bestTea.getName() + "\n\n" + bestTea.getDescription());
+            String displayName = isEnglish && bestTea.getNameEn() != null && !bestTea.getNameEn().isEmpty()
+                    ? bestTea.getNameEn() : bestTea.getName();
+            String displayDesc = isEnglish && bestTea.getDescriptionEn() != null && !bestTea.getDescriptionEn().isEmpty()
+                    ? bestTea.getDescriptionEn() : bestTea.getDescription();
+
+            resultText.setText(getString(R.string.your_tea) + ": " + displayName + "\n\n" + displayDesc);
             startTimerBtn.setVisibility(View.VISIBLE);
 
             Tea finalBestTea = bestTea;
             startTimerBtn.setOnClickListener(v -> {
                 Intent i = new Intent(RecommendationActivity.this, CountdownActivity.class);
-                i.putExtra("teaName", finalBestTea.getName());
-                i.putExtra("teaDescription", finalBestTea.getDescription());
+                String extraName = isEnglish && finalBestTea.getNameEn() != null && !finalBestTea.getNameEn().isEmpty() ? finalBestTea.getNameEn() : finalBestTea.getName();
+                String extraDesc = isEnglish && finalBestTea.getDescriptionEn() != null && !finalBestTea.getDescriptionEn().isEmpty() ? finalBestTea.getDescriptionEn() : finalBestTea.getDescription();
+                String extraReco = isEnglish && finalBestTea.getRecommendationEn() != null && !finalBestTea.getRecommendationEn().isEmpty() ? finalBestTea.getRecommendationEn() : finalBestTea.getRecommendation();
+                i.putExtra("teaName", extraName);
+                i.putExtra("teaDescription", extraDesc);
                 i.putExtra("brewTime", finalBestTea.getBrewTime());
                 i.putExtra("waterTemp", finalBestTea.getWaterTemp());
-                i.putExtra("recommendation", finalBestTea.getRecommendation());
+                i.putExtra("recommendation", extraReco);
                 i.putStringArrayListExtra("purposeArray", new ArrayList<>(finalBestTea.getPurpose()));
                 i.putStringArrayListExtra("flavorArray", new ArrayList<>(finalBestTea.getFlavor()));
                 i.putStringArrayListExtra("dayTimeArray", new ArrayList<>(finalBestTea.getDayTime()));
@@ -177,7 +189,7 @@ public class RecommendationActivity extends AppCompatActivity {
             });
 
         } else {
-            resultText.setText("Nem találtunk megfelelő teát a választásaid alapján.");
+            resultText.setText(getString(R.string.no_match));
         }
     }
 }

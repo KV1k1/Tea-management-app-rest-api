@@ -18,8 +18,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Create Account"
-            android:textSize="36sp"
+            android:text="Create an Account"
+            android:textSize="28sp"
             android:textStyle="bold"
             android:textColor="@android:color/black"
             android:layout_gravity="center_horizontal"
@@ -30,7 +30,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Join our tea community"
+            android:text="Join the tea community!"
             android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="@color/mediumGray"
@@ -49,7 +49,8 @@
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:padding="16dp">
 
                 <!-- Login Name -->
                 <com.google.android.material.textfield.TextInputLayout
@@ -127,24 +128,6 @@
                         android:maxLines="1" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Password Requirements -->
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Password requirements:"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/mediumGray"
-                    android:paddingBottom="4dp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="• 8+ characters\n• Uppercase letter\n• Lowercase letter\n• Number\n• Special character (@#$%^+=)"
-                    android:textSize="11sp"
-                    android:textColor="@color/mediumGray"
-                    android:paddingBottom="16dp" />
-
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -163,7 +146,7 @@
             android:id="@+id/tvLogin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Already have an account? Sign in"
+            android:text="Already have an account? Sign in!"
             android:textColor="@color/pomegranate"
             android:textStyle="bold"
             android:layout_gravity="center_horizontal"

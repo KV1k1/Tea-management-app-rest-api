@@ -57,7 +57,7 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://10.0.2.2:8080/") // Same as your tea API
+                .baseUrl("http://192.168.1.196:8080/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

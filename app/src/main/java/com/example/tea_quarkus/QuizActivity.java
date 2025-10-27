@@ -1,6 +1,7 @@
 package com.example.tea_quarkus;
 
 import android.animation.ObjectAnimator;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -36,6 +37,13 @@ public class QuizActivity extends AppCompatActivity {
     private Map<String, List<String>> answers = new HashMap<>(); // Multi-selection ready
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        String lang = newBase.getSharedPreferences("settings", MODE_PRIVATE)
+                .getString("lang", "hu");
+        super.attachBaseContext(LocaleHelper.setLocale(newBase, lang));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
@@ -54,11 +62,20 @@ public class QuizActivity extends AppCompatActivity {
 
         ScrollView scrollView = findViewById(R.id.scrollView);
 
-        // Initialize quiz questions
+        // Initialize quiz questions using localized strings and arrays
         questions = new ArrayList<>();
-        questions.add(new Question("Milyen hatást szeretnél?", new String[]{"Élénkítő", "Emésztés", "Nyugtató", "Gyulladáscsökkentő", "Immunitás", "Stresszoldó", "Bőrbarát", "Antioxidáns"}, "purpose"));
-        questions.add(new Question("Milyen ízvilágot keresel?", new String[]{"Gyümölcsös", "Virágos", "Friss", "Lágy", "Fanyar", "Édeskés", "Gazdag", "Mentolos"}, "flavor"));
-        questions.add(new Question("Mikor fogod inni?", new String[]{"Reggel", "Délelőtt", "Délután", "Étkezés után", "Este"}, "dayTime"));
+        questions.add(new Question(
+                getString(R.string.q_purpose),
+                getResources().getStringArray(R.array.purpose_options),
+                "purpose"));
+        questions.add(new Question(
+                getString(R.string.q_flavor),
+                getResources().getStringArray(R.array.flavor_options),
+                "flavor"));
+        questions.add(new Question(
+                getString(R.string.q_daytime),
+                getResources().getStringArray(R.array.daytime_options),
+                "dayTime"));
 
         if (questions.isEmpty()) {
             Toast.makeText(this, "No quiz questions available.", Toast.LENGTH_SHORT).show();
@@ -73,15 +90,24 @@ public class QuizActivity extends AppCompatActivity {
             if (currentQuestionIndex < questions.size()) {
                 animateQuestionChange(() -> showQuestion(currentQuestionIndex));
             } else {
-                // Finish quiz
+                // Finish quiz: map selections (localized) -> canonical HU before passing
                 Intent i = new Intent(QuizActivity.this, RecommendationActivity.class);
-                // Pass first answer for each type (single selection) for backward compatibility
-                for (Map.Entry<String, List<String>> entry : answers.entrySet()) {
-                    if (!entry.getValue().isEmpty()) {
-                        i.putExtra(entry.getKey(), entry.getValue().get(0));
-                    }
-                    i.putStringArrayListExtra(entry.getKey() + "Array", new ArrayList<>(entry.getValue()));
-                }
+
+                // Map each category
+                ArrayList<String> purposeHU = mapSelectionsToHu("purpose", answers.get("purpose"));
+                ArrayList<String> flavorHU = mapSelectionsToHu("flavor", answers.get("flavor"));
+                ArrayList<String> dayTimeHU = mapSelectionsToHu("dayTime", answers.get("dayTime"));
+
+                if (purposeHU != null && !purposeHU.isEmpty())
+                    i.putExtra("purpose", purposeHU.get(0));
+                if (flavorHU != null && !flavorHU.isEmpty()) i.putExtra("flavor", flavorHU.get(0));
+                if (dayTimeHU != null && !dayTimeHU.isEmpty())
+                    i.putExtra("dayTime", dayTimeHU.get(0));
+
+                i.putStringArrayListExtra("purposeArray", purposeHU != null ? purposeHU : new ArrayList<>());
+                i.putStringArrayListExtra("flavorArray", flavorHU != null ? flavorHU : new ArrayList<>());
+                i.putStringArrayListExtra("dayTimeArray", dayTimeHU != null ? dayTimeHU : new ArrayList<>());
+
                 startActivity(i);
                 finish();
             }
@@ -222,19 +248,63 @@ public class QuizActivity extends AppCompatActivity {
             optionsContainer.getChildAt(i).startAnimation(fadeOut);
             if (opcio3.getVisibility() == View.VISIBLE)
                 opcio3.startAnimation(fadeOut);
-
         }
     }
 
+    private ArrayList<String> mapSelectionsToHu(String type, List<String> selectedDisplay) {
+        if (selectedDisplay == null) return new ArrayList<>();
+
+        String[] display;
+        String[] canonicalHU;
+        switch (type) {
+            case "purpose":
+                display = getResources().getStringArray(R.array.purpose_options);
+                canonicalHU = getResources().getStringArray(R.array.purpose_options_hu);
+                break;
+            case "flavor":
+                display = getResources().getStringArray(R.array.flavor_options);
+                canonicalHU = getResources().getStringArray(R.array.flavor_options_hu);
+                break;
+            case "dayTime":
+                display = getResources().getStringArray(R.array.daytime_options);
+                canonicalHU = getResources().getStringArray(R.array.daytime_options_hu);
+                break;
+            default:
+                return new ArrayList<>(selectedDisplay);
+        }
+
+        ArrayList<String> result = new ArrayList<>();
+        for (String sel : selectedDisplay) {
+            int idx = indexOfIgnoreCase(display, sel);
+            if (idx >= 0 && idx < canonicalHU.length) {
+                result.add(canonicalHU[idx]);
+            }
+        }
+        return result;
+    }
+
+    private int indexOfIgnoreCase(String[] arr, String needle) {
+        if (arr == null || needle == null) return -1;
+        for (int i = 0; i < arr.length; i++) {
+            if (needle.equalsIgnoreCase(arr[i])) return i;
+        }
+        return -1;
+    }
+
     private abstract static class SimpleAnimationListener implements android.view.animation.Animation.AnimationListener {
-        @Override public void onAnimationStart(android.view.animation.Animation animation) {}
-        @Override public void onAnimationRepeat(android.view.animation.Animation animation) {}
+        @Override
+        public void onAnimationStart(android.view.animation.Animation animation) {
+        }
+
+        @Override
+        public void onAnimationRepeat(android.view.animation.Animation animation) {
+        }
     }
 
     private static class Question {
-        private String questionText;
-        private String[] options;
-        private String type;
+        private final String questionText;
+        private final String[] options;
+        private final String type;
 
         public Question(String questionText, String[] options, String type) {
             this.questionText = questionText;
@@ -242,8 +312,16 @@ public class QuizActivity extends AppCompatActivity {
             this.type = type;
         }
 
-        public String getQuestionText() { return questionText; }
-        public String[] getOptions() { return options; }
-        public String getType() { return type; }
+        public String getQuestionText() {
+            return questionText;
+        }
+
+        public String[] getOptions() {
+            return options;
+        }
+
+        public String getType() {
+            return type;
+        }
     }
 }

@@ -1,4 +1,17 @@
 <resources>
+    <string name="acc_maker">Create an account</string>
+    <string name="join">Join our community</string>
+    <string name="sign_in">Already have an account? Sign in!</string>
+
+    <string name="welcome">Welcome!</string>
+    <string name="log_in">Sign in to continue!</string>
+
+    <string name="loggingin">Sign in</string>
+    <string name="no_acc">Dont have an account? Sign up</string>
+
+    <string name="backbut">Back</string>
+
+
     <string name="app_name">Tea Brewing</string>
 
     <!-- Buttons -->
@@ -9,20 +22,16 @@
 
     <!-- Titles -->
     <string name="main_title">Tea Time</string>
-    <string name="main_subtitle">Sip, sip, hooray! It’s tea time.</string>
+    <string name="main_subtitle">Sip, sip, hooray! Its tea time.</string>
 
     <!-- Tea Quiz Card -->
-    <string name="quiz_card_title">📝 Tea Quiz</string>
-    <string name="quiz_card_description">
-        Not sure which tea to start with? Take the quiz and find out which tea matches your mood the best!
-    </string>
+    <string name="quiz_card_title">&#x1F4DD; Tea Quiz</string>
+    <string name="quiz_card_description">Not sure which tea to start with? Take the quiz and find out which tea matches your mood the best!</string>
     <string name="quiz_start">Take the quiz</string>
 
     <!-- Tea Brewing Card -->
-    <string name="brew_card_title">🍃 Tea Brewing</string>
-    <string name="brew_card_description">
-        Already have a favorite? Pick a tea and we’ll help you brew it perfectly every time with our built-in timer!
-    </string>
+    <string name="brew_card_title">&#x1F342; Tea Brewing</string>
+    <string name="brew_card_description">Already have a favorite? Pick a tea and we will help you brew it perfectly every time with our built-in timer!</string>
     <string name="brew_start">Choose a tea</string>
 
     <!-- Language dialog -->
@@ -31,4 +40,89 @@
     <string name="dialog_english">English</string>
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Cancel</string>
+
+    <!-- Admin/Quiz dialog titles -->
+    <string name="title_select_purposes">Select purposes</string>
+    <string name="title_select_flavors">Select flavors</string>
+    <string name="title_select_daytimes">Select day times</string>
+
+    <!-- Quiz question texts -->
+    <string name="choose_tea">Choose a tea</string>
+
+
+    <string name="q_purpose">What effect are you looking for?</string>
+    <string name="q_flavor">What flavor profile are you after?</string>
+    <string name="q_daytime">When will you drink it?</string>
+
+    <!-- Display arrays (localized EN) - order must match HU arrays -->
+    <string-array name="purpose_options">
+        <item>Energizing</item>
+        <item>Digestion</item>
+        <item>Calming</item>
+        <item>Anti-inflammatory</item>
+        <item>Immunity</item>
+        <item>Stress relief</item>
+        <item>Skin-friendly</item>
+        <item>Antioxidant</item>
+    </string-array>
+    <string-array name="purpose_options_en">
+        <item>Energizing</item>
+        <item>Digestion</item>
+        <item>Calming</item>
+        <item>Anti-inflammatory</item>
+        <item>Immunity</item>
+        <item>Stress relief</item>
+        <item>Skin-friendly</item>
+        <item>Antioxidant</item>
+    </string-array>
+    <string-array name="flavor_options">
+        <item>Fruity</item>
+        <item>Floral</item>
+        <item>Fresh</item>
+        <item>Soft</item>
+        <item>Tart</item>
+        <item>Sweetish</item>
+        <item>Rich</item>
+        <item>Minty</item>
+    </string-array>
+    <string-array name="flavor_options_en">
+        <item>Fruity</item>
+        <item>Floral</item>
+        <item>Fresh</item>
+        <item>Soft</item>
+        <item>Tart</item>
+        <item>Sweetish</item>
+        <item>Rich</item>
+        <item>Minty</item>
+    </string-array>
+    <string-array name="daytime_options">
+        <item>Morning</item>
+        <item>Forenoon</item>
+        <item>Afternoon</item>
+        <item>After meal</item>
+        <item>Evening</item>
+    </string-array>
+    <string-array name="daytime_options_en">
+        <item>Morning</item>
+        <item>Forenoon</item>
+        <item>Afternoon</item>
+        <item>After meal</item>
+        <item>Evening</item>
+    </string-array>
+
+    <!-- Countdown/Details labels (EN) -->
+    <string name="label_purpose">Purpose</string>
+    <string name="label_flavor">Flavor</string>
+    <string name="label_daytime">Best time</string>
+    <string name="label_reco_temp">Recommended temp</string>
+    <string name="label_tip">Tip</string>
+    <string name="btn_start_brewing">Start brewing</string>
+    <string name="btn_running">Running...</string>
+    <string name="btn_resume">Resume</string>
+    <string name="timer_done">Done!</string>
+    <string name="toast_enjoy">Enjoy your &#x1F375;</string>
+
+    <!-- Recommendation messages -->
+    <string name="your_tea">Your tea</string>
+    <string name="no_match">We couldnt find a tea matching your choices.</string>
 </resources>

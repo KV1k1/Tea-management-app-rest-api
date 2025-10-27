@@ -16,9 +16,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.core.os.ConfigurationCompat;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -32,8 +34,16 @@ public class TeaSelectionActivity extends AppCompatActivity {
     private TeaAdapter adapter;
     private final ArrayList<Tea> teaList = new ArrayList<>();
     private final ArrayList<Tea> filteredList = new ArrayList<>();
+    private boolean isEnglish;
     private SearchView searchView;
     private Button btnSortAZ, btnSortZA;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        String lang = newBase.getSharedPreferences("settings", MODE_PRIVATE)
+                .getString("lang", "hu");
+        super.attachBaseContext(LocaleHelper.setLocale(newBase, lang));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,18 +51,21 @@ public class TeaSelectionActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_tea_selection);
 
+        isEnglish = getSharedPreferences("settings", MODE_PRIVATE)
+                .getString("lang", "hu").equalsIgnoreCase("en");
+
         recyclerView = findViewById(R.id.teaRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(
                 new DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
         );
 
-        adapter = new TeaAdapter(this, filteredList);
+        adapter = new TeaAdapter(this, filteredList, this::isEnglishSelected);
         recyclerView.setAdapter(adapter);
 
         // ✅ Replace with your Quarkus server IP address (important if testing on a device)
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://10.0.2.2:8080/") // example: use your PC's local IP
+                .baseUrl("http://192.168.1.196:8080/") // example: use your PC's local IP
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -66,8 +79,7 @@ public class TeaSelectionActivity extends AppCompatActivity {
                     teaList.clear();
                     teaList.addAll(response.body());
 
-                    // Sort alphabetically A–Z initially
-                    teaList.sort((t1, t2) -> t1.getName().compareToIgnoreCase(t2.getName()));
+                    sortTeaList();
 
                     filteredList.clear();
                     filteredList.addAll(teaList);
@@ -96,18 +108,17 @@ public class TeaSelectionActivity extends AppCompatActivity {
                 return true;
             }
         });
-
         // Sorting buttons
         btnSortAZ = findViewById(R.id.btnSortAZ);
         btnSortZA = findViewById(R.id.btnSortZA);
 
         btnSortAZ.setOnClickListener(v -> {
-            filteredList.sort((t1, t2) -> t1.getName().compareToIgnoreCase(t2.getName()));
+            filteredList.sort((t1, t2) -> getSortableName(t1).compareToIgnoreCase(getSortableName(t2)));
             adapter.notifyDataSetChanged();
         });
 
         btnSortZA.setOnClickListener(v -> {
-            filteredList.sort((t1, t2) -> t2.getName().compareToIgnoreCase(t1.getName()));
+            filteredList.sort((t1, t2) -> getSortableName(t2).compareToIgnoreCase(getSortableName(t1)));
             adapter.notifyDataSetChanged();
         });
     }
@@ -119,7 +130,7 @@ public class TeaSelectionActivity extends AppCompatActivity {
         } else {
             String lowerQuery = query.toLowerCase();
             for (Tea tea : teaList) {
-                if (tea.getName().toLowerCase().contains(lowerQuery)) {
+                if (getSortableName(tea).toLowerCase().contains(lowerQuery)) {
                     filteredList.add(tea);
                 }
             }
@@ -127,14 +138,30 @@ public class TeaSelectionActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
     }
 
+    private boolean isEnglishSelected() {
+        return isEnglish;
+    }
+
+    private void sortTeaList() {
+        teaList.sort((t1, t2) -> getSortableName(t1).compareToIgnoreCase(getSortableName(t2)));
+    }
+
+    private String getSortableName(Tea tea) {
+        String hu = tea.getName() != null ? tea.getName() : "";
+        String en = tea.getNameEn() != null ? tea.getNameEn() : "";
+        return isEnglish ? (en.isEmpty() ? hu : en) : hu;
+    }
+
     // RecyclerView Adapter
     static class TeaAdapter extends RecyclerView.Adapter<TeaAdapter.TeaViewHolder> {
         private final Context context;
-        private final ArrayList<Tea> teas;
+        private final List<Tea> teas;
+        private final Supplier<Boolean> isEnglishSupplier;
 
-        TeaAdapter(Context context, ArrayList<Tea> teas) {
+        TeaAdapter(Context context, List<Tea> teas, Supplier<Boolean> isEnglishSupplier) {
             this.context = context;
             this.teas = teas;
+            this.isEnglishSupplier = isEnglishSupplier;
         }
 
         @NonNull
@@ -148,18 +175,27 @@ public class TeaSelectionActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull TeaViewHolder holder, int position) {
             Tea tea = teas.get(position);
-            holder.tvName.setText(tea.getName());
-            holder.tvDescription.setText(tea.getDescription());
+            boolean isEn = isEnglishSupplier.get();
+            String displayName = isEn && tea.getNameEn() != null && !tea.getNameEn().isEmpty()
+                    ? tea.getNameEn() : tea.getName();
+            String displayDesc = isEn && tea.getDescriptionEn() != null && !tea.getDescriptionEn().isEmpty()
+                    ? tea.getDescriptionEn() : tea.getDescription();
+            holder.tvName.setText(displayName);
+            holder.tvDescription.setText(displayDesc);
             holder.tvBrewTime.setText("⏱ " + tea.getBrewTime() + " min");
             holder.tvTemp.setText("🌡 " + tea.getWaterTemp() + "°C");
 
             holder.itemView.setOnClickListener(v -> {
                 Intent intent = new Intent(context, CountdownActivity.class);
-                intent.putExtra("teaName", tea.getName());
-                intent.putExtra("teaDescription", tea.getDescription());
+                boolean isEnConfig = isEnglishSupplier.get();
+                String extraName = isEnConfig && tea.getNameEn() != null && !tea.getNameEn().isEmpty() ? tea.getNameEn() : tea.getName();
+                String extraDesc = isEnConfig && tea.getDescriptionEn() != null && !tea.getDescriptionEn().isEmpty() ? tea.getDescriptionEn() : tea.getDescription();
+                String extraReco = isEnConfig && tea.getRecommendationEn() != null && !tea.getRecommendationEn().isEmpty() ? tea.getRecommendationEn() : tea.getRecommendation();
+                intent.putExtra("teaName", extraName);
+                intent.putExtra("teaDescription", extraDesc);
                 intent.putExtra("brewTime", tea.getBrewTime());
                 intent.putExtra("waterTemp", tea.getWaterTemp());
-                intent.putExtra("recommendation", tea.getRecommendation());
+                intent.putExtra("recommendation", extraReco);
                 intent.putStringArrayListExtra("purposeArray", new ArrayList<>(tea.getPurpose()));
                 intent.putStringArrayListExtra("flavorArray", new ArrayList<>(tea.getFlavor()));
                 intent.putStringArrayListExtra("dayTimeArray", new ArrayList<>(tea.getDayTime()));

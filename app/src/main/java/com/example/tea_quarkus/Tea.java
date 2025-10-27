@@ -7,6 +7,10 @@ public class Tea {
     private String name;
     private String description;
     private String recommendation;
+    // Optional English-localized fields (if backend provides them)
+    private String nameEn;
+    private String descriptionEn;
+    private String recommendationEn;
     private int brewTime;
     private int waterTemp;
     private List<String> flavor;
@@ -36,6 +40,9 @@ public class Tea {
     public String getName() { return name; }
     public String getDescription() { return description; }
     public String getRecommendation() { return recommendation; }
+    public String getNameEn() { return nameEn; }
+    public String getDescriptionEn() { return descriptionEn; }
+    public String getRecommendationEn() { return recommendationEn; }
     public int getBrewTime() { return brewTime; }
     public int getWaterTemp() { return waterTemp; }
     public List<String> getFlavor() { return flavor; }
@@ -54,10 +61,21 @@ public class Tea {
         this.recommendation = recommendation;
     }
 
+    public void setNameEn(String nameEn) {
+        this.nameEn = nameEn;
+    }
+
+    public void setDescriptionEn(String descriptionEn) {
+        this.descriptionEn = descriptionEn;
+    }
+
+    public void setRecommendationEn(String recommendationEn) {
+        this.recommendationEn = recommendationEn;
+    }
+
     public void setBrewTime(int brewTime) {
         this.brewTime = brewTime;
     }
-
     public void setWaterTemp(int waterTemp) {
         this.waterTemp = waterTemp;
     }

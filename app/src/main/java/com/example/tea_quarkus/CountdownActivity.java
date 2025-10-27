@@ -3,6 +3,8 @@ package com.example.tea_quarkus;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
+import android.content.Context;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
@@ -30,7 +32,7 @@ import java.util.ArrayList;
 public class CountdownActivity extends AppCompatActivity {
 
     private TextView teaName, teaDescription, timerText;
-    private MaterialButton startButton, btnPause, btnRestart;
+    private MaterialButton startButton, btnPause, btnRestart, backButton;
     private CircularProgressIndicator circularProgress;
 
     private ObjectAnimator rotationAnimator;
@@ -41,6 +43,13 @@ public class CountdownActivity extends AppCompatActivity {
     private long timeLeftMillis;
     private long totalTimeMillis;
     private float currentRotation = 0f;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        String lang = newBase.getSharedPreferences("settings", MODE_PRIVATE)
+                .getString("lang", "hu");
+        super.attachBaseContext(LocaleHelper.setLocale(newBase, lang));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +70,7 @@ public class CountdownActivity extends AppCompatActivity {
         startButton = findViewById(R.id.startTimerButton);
         btnPause = findViewById(R.id.btnPause);
         btnRestart = findViewById(R.id.btnRestart);
+        backButton = findViewById(R.id.backButton);
 
         // Get tea details from Intent
         String name = getIntent().getStringExtra("teaName");
@@ -69,23 +79,36 @@ public class CountdownActivity extends AppCompatActivity {
         int waterTemp = getIntent().getIntExtra("waterTemp", 80);
         String recommendation = getIntent().getStringExtra("recommendation");
 
-        ArrayList<String> purposes = getIntent().getStringArrayListExtra("purposeArray");
-        ArrayList<String> flavors = getIntent().getStringArrayListExtra("flavorArray");
-        ArrayList<String> dayTime = getIntent().getStringArrayListExtra("dayTimeArray");
+        ArrayList<String> purposesHU = getIntent().getStringArrayListExtra("purposeArray");
+        ArrayList<String> flavorsHU = getIntent().getStringArrayListExtra("flavorArray");
+        ArrayList<String> dayTimeHU = getIntent().getStringArrayListExtra("dayTimeArray");
+
+        // Map canonical HU tags to localized display labels for UI
+        ArrayList<String> purposes = mapHuListToDisplay("purpose", purposesHU);
+        ArrayList<String> flavors = mapHuListToDisplay("flavor", flavorsHU);
+        ArrayList<String> dayTime = mapHuListToDisplay("dayTime", dayTimeHU);
 
         teaName.setText(name);
+
+        backButton.setOnClickListener(v ->
+                startActivity(new Intent(CountdownActivity.this, MainActivity.class)));
 
         // Build summary text
         StringBuilder summary = new StringBuilder();
         summary.append(description).append("\n\n");
         if (purposes != null && !purposes.isEmpty())
-            summary.append("Amire jó: ").append(String.join(", ", purposes)).append("\n");
+            summary.append(getString(R.string.label_purpose)).append(": ")
+                    .append(String.join(", ", purposes)).append("\n");
         if (flavors != null && !flavors.isEmpty())
-            summary.append("Ízvilág: ").append(String.join(", ", flavors)).append("\n");
+            summary.append(getString(R.string.label_flavor)).append(": ")
+                    .append(String.join(", ", flavors)).append("\n");
         if (dayTime != null && !dayTime.isEmpty())
-            summary.append("Legjobb fogyasztási idő: ").append(String.join(", ", dayTime)).append("\n");
-        summary.append("Ajánlott hőfok: ").append(waterTemp).append("°C\n");
-        summary.append("Fogyasztási tipp: ").append(recommendation);
+            summary.append(getString(R.string.label_daytime)).append(": ")
+                    .append(String.join(", ", dayTime)).append("\n");
+        summary.append(getString(R.string.label_reco_temp)).append(": ")
+                .append(waterTemp).append("°C\n");
+        summary.append(getString(R.string.label_tip)).append(": ")
+                .append(recommendation);
 
         teaDescription.setText(summary.toString());
         teaDescription.setBackgroundResource(R.drawable.shadow_box);
@@ -125,12 +148,13 @@ public class CountdownActivity extends AppCompatActivity {
 
             if (isRunning) startCountdown(timeLeftMillis);
             else if (isPaused) {
-                startButton.setText("Resume");
+                startButton.setText(getString(R.string.btn_resume));
                 startButton.setEnabled(true);
                 btnPause.setEnabled(false);
             }
         }
     }
+
 
     private void setKeepScreenOn(boolean keepOn) {
         if (keepOn) getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -170,7 +194,7 @@ public class CountdownActivity extends AppCompatActivity {
 
 
 
-        startButton.setText("Running...");
+        startButton.setText(getString(R.string.btn_running));
         startButton.setEnabled(false);
         btnPause.setEnabled(true);
     }
@@ -215,7 +239,7 @@ public class CountdownActivity extends AppCompatActivity {
         isPaused = true;
         setKeepScreenOn(false);
 
-        startButton.setText("Resume");
+        startButton.setText(getString(R.string.btn_resume));
         startButton.setEnabled(true);
         btnPause.setEnabled(false);
     }
@@ -223,7 +247,7 @@ public class CountdownActivity extends AppCompatActivity {
     private void resumeTimer() {
         startRotation(true);
         startCountdown(timeLeftMillis);
-        startButton.setText("Running...");
+        startButton.setText(getString(R.string.btn_running));
     }
 
     private void restartTimer() {
@@ -240,7 +264,7 @@ public class CountdownActivity extends AppCompatActivity {
         circularProgress.setRotation(0f);
         updateTimerText();
 
-        startButton.setText("Start Brewing");
+        startButton.setText(getString(R.string.btn_start_brewing));
         startButton.setEnabled(true);
         btnPause.setEnabled(false);
     }
@@ -252,9 +276,9 @@ public class CountdownActivity extends AppCompatActivity {
 
         stopAnimations();
         circularProgress.setProgress(100);
-        timerText.setText("Done!");
+        timerText.setText(getString(R.string.timer_done));
 
-        Toast.makeText(this, "Enjoy your 🍵", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.toast_enjoy), Toast.LENGTH_SHORT).show();
 
         try {
             MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.beep);
@@ -279,7 +303,7 @@ public class CountdownActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        startButton.setText("Start Brewing");
+        startButton.setText(getString(R.string.btn_start_brewing));
         startButton.setEnabled(true);
         btnPause.setEnabled(false);
     }
@@ -292,6 +316,45 @@ public class CountdownActivity extends AppCompatActivity {
 
     private void stopAnimations() {
         if (rotationAnimator != null) rotationAnimator.cancel();
+    }
+
+    // Map canonical HU list to localized display labels by index mapping of synchronized arrays
+    private ArrayList<String> mapHuListToDisplay(String type, ArrayList<String> huList) {
+        ArrayList<String> result = new ArrayList<>();
+        if (huList == null) return result;
+
+        String[] display;
+        String[] canonicalHU;
+        switch (type) {
+            case "purpose":
+                display = getResources().getStringArray(R.array.purpose_options);
+                canonicalHU = getResources().getStringArray(R.array.purpose_options_hu);
+                break;
+            case "flavor":
+                display = getResources().getStringArray(R.array.flavor_options);
+                canonicalHU = getResources().getStringArray(R.array.flavor_options_hu);
+                break;
+            case "dayTime":
+                display = getResources().getStringArray(R.array.daytime_options);
+                canonicalHU = getResources().getStringArray(R.array.daytime_options_hu);
+                break;
+            default:
+                return huList;
+        }
+
+        for (String hu : huList) {
+            int idx = indexOfIgnoreCase(canonicalHU, hu);
+            if (idx >= 0 && idx < display.length) result.add(display[idx]);
+        }
+        return result;
+    }
+
+    private int indexOfIgnoreCase(String[] arr, String needle) {
+        if (arr == null || needle == null) return -1;
+        for (int i = 0; i < arr.length; i++) {
+            if (needle.equalsIgnoreCase(arr[i])) return i;
+        }
+        return -1;
     }
 
     @Override
