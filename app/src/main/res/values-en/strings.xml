@@ -3,6 +3,7 @@
 
     <!-- Buttons -->
     <string name="language_button">Language</string>
+    <string name="logout_button">Logout</string>
     <string name="quiz_button">Take the Quiz</string>
     <string name="brewing_button">Choose a Tea</string>
 

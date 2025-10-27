@@ -13,14 +13,43 @@
         android:padding="24dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <Button
-            android:id="@+id/btnLanguage"
-            android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/language_button"
-            android:layout_marginTop="16dp"
-            android:backgroundTint="@color/pomegranate"
-            android:textColor="@android:color/white"/>
+            android:layout_marginTop="16dp">
+
+            <Button
+                android:id="@+id/btnLanguage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/language_button"
+                android:backgroundTint="@color/pomegranate"
+                android:textColor="@android:color/white"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btnAdminPanel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Admin"
+                app:layout_constraintStart_toEndOf="@+id/btnLanguage"
+                android:layout_marginStart="30dp"
+                android:backgroundTint="@color/pomegranate"
+                android:textColor="@android:color/white"
+                tools:ignore="MissingConstraints" />
+
+            <Button
+                android:id="@+id/btnLogout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/logout_button"
+                android:backgroundTint="@color/pomegranate"
+                android:textColor="@android:color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
         <!-- Title -->

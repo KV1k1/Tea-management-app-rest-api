@@ -41,14 +41,17 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 
-    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation ("com.squareup.okhttp3:logging-interceptor:4.11.0")
+    // Network dependencies - ONLY THESE ARE NEEDED FOR ANDROID CLIENT
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
 
-    implementation ("io.quarkus:quarkus-smallrye-jwt")
-    implementation ("io.quarkus:quarkus-security-jdbc") // optional if storing users in DB
-    implementation ("io.quarkus:quarkus-hibernate-orm-panache")
-    implementation ("io.quarkus:quarkus-jdbc-postgresql")
+    // RecyclerView for your tea list
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
 
-
+    // REMOVE THESE QUARKUS DEPENDENCIES - THEY ARE FOR SERVER ONLY!
+    // implementation ("io.quarkus:quarkus-smallrye-jwt")
+    // implementation ("io.quarkus:quarkus-security-jdbc")
+    // implementation ("io.quarkus:quarkus-hibernate-orm-panache")
+    // implementation ("io.quarkus:quarkus-jdbc-postgresql")
 }
