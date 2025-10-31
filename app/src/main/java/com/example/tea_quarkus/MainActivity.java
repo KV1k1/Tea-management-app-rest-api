@@ -20,16 +20,12 @@ import java.nio.charset.StandardCharsets;
 public class MainActivity extends AppCompatActivity {
 
     private Button btnTeaQuiz, btnTeaBrewing, btnLanguage, btnLogout;
-
     private Button btnAdminPanel;
-
 
     @Override
     protected void attachBaseContext(Context newBase) {
-        // Load saved language before activity is created
         String lang = newBase.getSharedPreferences("settings", MODE_PRIVATE)
                 .getString("lang", "hu");
-       Context context = LocaleHelper.setLocale(newBase, lang);
         super.attachBaseContext(LocaleHelper.setLocale(newBase, lang));
     }
 
@@ -67,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
 
         btnLanguage.setOnClickListener(v -> showLanguageDialog());
 
-            btnLogout.setOnClickListener(v -> {
+        btnLogout.setOnClickListener(v -> {
             new TokenManager(this).clear();
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
             finish();
@@ -80,8 +76,6 @@ public class MainActivity extends AppCompatActivity {
         String loginName = tokenManager.getLoginName();
 
         boolean hasAdminRole = hasAdminRoleFromToken(token);
-
-        // Fallback to legacy username check to avoid locking out admin if token doesn't carry roles
         boolean isLegacyAdmin = "teaAdmin".equals(loginName);
 
         System.out.println("Current login name: " + loginName);
@@ -95,12 +89,11 @@ public class MainActivity extends AppCompatActivity {
         if (token == null) return false;
         try {
             String[] parts = token.split("\\.");
-            if (parts.length < 2) return false; // Not a JWT
+            if (parts.length < 2) return false;
             byte[] payloadBytes = Base64.decode(parts[1], Base64.URL_SAFE | Base64.NO_WRAP | Base64.NO_PADDING);
             String payloadJson = new String(payloadBytes, StandardCharsets.UTF_8);
             JSONObject payload = new JSONObject(payloadJson);
 
-            // Try common claim names
             if (payload.has("groups")) {
                 if (arrayHasAdmin(payload.getJSONArray("groups"))) return true;
             }
@@ -148,9 +141,7 @@ public class MainActivity extends AppCompatActivity {
                             .apply();
 
                     LocaleHelper.setLocale(MainActivity.this, selectedLang);
-
                     recreate();
-
                 })
                 .setNegativeButton(getString(R.string.dialog_cancel), null)
                 .show();

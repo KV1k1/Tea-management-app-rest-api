@@ -11,8 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
@@ -64,7 +62,6 @@ public class AdminTeaManagementActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
-        // Set click listeners for edit and delete
         adapter.setOnItemClickListener(new TeaAdapter.OnItemClickListener() {
             @Override
             public void onEditClick(int position) {
@@ -82,12 +79,7 @@ public class AdminTeaManagementActivity extends AppCompatActivity {
 
     private void loadAllTeas() {
         String token = tokenManager.getToken();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.196:8080")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        TeaApi teaApi = retrofit.create(TeaApi.class);
+        TeaApi teaApi = ApiClient.getTeaApi();
         Call<List<Tea>> call = teaApi.getAllTeasAdmin("Bearer " + token);
 
         call.enqueue(new Callback<List<Tea>>() {
@@ -98,17 +90,7 @@ public class AdminTeaManagementActivity extends AppCompatActivity {
                     teaList.addAll(response.body());
                     adapter.notifyDataSetChanged();
                 } else {
-                    String msg = "Failed to load teas (" + response.code() + ")";
-                    try {
-                        if (response.errorBody() != null) {
-                            String body = response.errorBody().string();
-                            if (!body.isEmpty()) msg += ": " + body;
-                        }
-                    } catch (Exception ignored) {}
-                    if (response.code() == 401 || response.code() == 403) {
-                        msg = "Unauthorized (" + response.code() + "): Admin access required. Please re-login with an admin account.";
-                    }
-                    Toast.makeText(AdminTeaManagementActivity.this, msg, Toast.LENGTH_LONG).show();
+                    ApiResponseHandler.handleResponse(AdminTeaManagementActivity.this, response);
                 }
             }
 
@@ -205,7 +187,6 @@ public class AdminTeaManagementActivity extends AppCompatActivity {
         EditText etPurposes = dialogView.findViewById(R.id.etPurposes);
         EditText etDayTimes = dialogView.findViewById(R.id.etDayTimes);
 
-        // Pre-fill with existing data
         etName.setText(tea.getName());
         etNameEn.setText(tea.getNameEn());
         etDescription.setText(tea.getDescription());
@@ -276,12 +257,7 @@ public class AdminTeaManagementActivity extends AppCompatActivity {
 
     private void createTea(Tea tea) {
         String token = tokenManager.getToken();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.196:8080/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        TeaApi teaApi = retrofit.create(TeaApi.class);
+        TeaApi teaApi = ApiClient.getTeaApi();
         Call<Tea> call = teaApi.createTeaAdmin("Bearer " + token, tea);
 
         call.enqueue(new Callback<Tea>() {
@@ -291,17 +267,7 @@ public class AdminTeaManagementActivity extends AppCompatActivity {
                     Toast.makeText(AdminTeaManagementActivity.this, "Tea created successfully!", Toast.LENGTH_SHORT).show();
                     loadAllTeas();
                 } else {
-                    String msg = "Failed to create tea (" + response.code() + ")";
-                    try {
-                        if (response.errorBody() != null) {
-                            String body = response.errorBody().string();
-                            if (!body.isEmpty()) msg += ": " + body;
-                        }
-                    } catch (Exception ignored) {}
-                    if (response.code() == 401 || response.code() == 403) {
-                        msg = "Unauthorized (" + response.code() + "): Admin access required.";
-                    }
-                    Toast.makeText(AdminTeaManagementActivity.this, msg, Toast.LENGTH_LONG).show();
+                    ApiResponseHandler.handleResponse(AdminTeaManagementActivity.this, response);
                 }
             }
 
@@ -314,12 +280,7 @@ public class AdminTeaManagementActivity extends AppCompatActivity {
 
     private void updateTea(long teaId, Tea tea) {
         String token = tokenManager.getToken();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.196:8080/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        TeaApi teaApi = retrofit.create(TeaApi.class);
+        TeaApi teaApi = ApiClient.getTeaApi();
         Call<Tea> call = teaApi.updateTeaAdmin("Bearer " + token, teaId, tea);
 
         call.enqueue(new Callback<Tea>() {
@@ -329,17 +290,7 @@ public class AdminTeaManagementActivity extends AppCompatActivity {
                     Toast.makeText(AdminTeaManagementActivity.this, "Tea updated successfully!", Toast.LENGTH_SHORT).show();
                     loadAllTeas();
                 } else {
-                    String msg = "Failed to update tea (" + response.code() + ")";
-                    try {
-                        if (response.errorBody() != null) {
-                            String body = response.errorBody().string();
-                            if (!body.isEmpty()) msg += ": " + body;
-                        }
-                    } catch (Exception ignored) {}
-                    if (response.code() == 401 || response.code() == 403) {
-                        msg = "Unauthorized (" + response.code() + "): Admin access required.";
-                    }
-                    Toast.makeText(AdminTeaManagementActivity.this, msg, Toast.LENGTH_LONG).show();
+                    ApiResponseHandler.handleResponse(AdminTeaManagementActivity.this, response);
                 }
             }
 
@@ -352,12 +303,7 @@ public class AdminTeaManagementActivity extends AppCompatActivity {
 
     private void deleteTea(long teaId) {
         String token = tokenManager.getToken();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.196:8080/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        TeaApi teaApi = retrofit.create(TeaApi.class);
+        TeaApi teaApi = ApiClient.getTeaApi();
         Call<Void> call = teaApi.deleteTeaAdmin("Bearer " + token, teaId);
 
         call.enqueue(new Callback<Void>() {
@@ -367,17 +313,7 @@ public class AdminTeaManagementActivity extends AppCompatActivity {
                     Toast.makeText(AdminTeaManagementActivity.this, "Tea deleted successfully!", Toast.LENGTH_SHORT).show();
                     loadAllTeas();
                 } else {
-                    String msg = "Failed to delete tea (" + response.code() + ")";
-                    try {
-                        if (response.errorBody() != null) {
-                            String body = response.errorBody().string();
-                            if (!body.isEmpty()) msg += ": " + body;
-                        }
-                    } catch (Exception ignored) {}
-                    if (response.code() == 401 || response.code() == 403) {
-                        msg = "Unauthorized (" + response.code() + "): Admin access required.";
-                    }
-                    Toast.makeText(AdminTeaManagementActivity.this, msg, Toast.LENGTH_LONG).show();
+                    ApiResponseHandler.handleResponse(AdminTeaManagementActivity.this, response);
                 }
             }
 
@@ -409,13 +345,11 @@ public class AdminTeaManagementActivity extends AppCompatActivity {
         return sb.toString();
     }
 
-    // Helper to load canonical HU arrays
     private String[] PURPOSE_OPTIONS_HU() { return getResources().getStringArray(R.array.purpose_options_hu); }
     private String[] FLAVOR_OPTIONS_HU()  { return getResources().getStringArray(R.array.flavor_options_hu); }
     private String[] DAYTIME_OPTIONS_HU() { return getResources().getStringArray(R.array.daytime_options_hu); }
 
     private void setupMultiSelectField(EditText target, String title, String[] options) {
-        // Make field read-only and clickable
         target.setFocusable(false);
         target.setClickable(true);
         target.setLongClickable(false);
@@ -425,27 +359,22 @@ public class AdminTeaManagementActivity extends AppCompatActivity {
     }
 
     private void showMultiSelectDialog(EditText target, String title, String[] displayOptions) {
-        // Determine which category this field represents and get canonical HU arrays
         String[] canonicalHU;
         if (target.getId() == R.id.etPurposes) {
             canonicalHU = PURPOSE_OPTIONS_HU();
         } else if (target.getId() == R.id.etFlavors) {
             canonicalHU = FLAVOR_OPTIONS_HU();
-        } else { // etDayTimes
+        } else {
             canonicalHU = DAYTIME_OPTIONS_HU();
         }
 
-        // Build mapping index between display and canonical HU by position
-        // Preselect based on current field value (stored as HU canonical)
         List<String> currentHU = parseCommaSeparated(target.getText() != null ? target.getText().toString() : "");
-        // Convert current HU to display for checked[] toggle
         boolean[] checked = new boolean[displayOptions.length];
         for (int i = 0; i < displayOptions.length; i++) {
             final String hu = canonicalHU[i];
             checked[i] = currentHU.stream().anyMatch(s -> s.equalsIgnoreCase(hu));
         }
 
-        // Start selected list as display labels based on current HU set
         List<String> selectedDisplay = new ArrayList<>();
         for (int i = 0; i < displayOptions.length; i++) {
             if (checked[i]) selectedDisplay.add(displayOptions[i]);
@@ -464,7 +393,6 @@ public class AdminTeaManagementActivity extends AppCompatActivity {
                     }
                 })
                 .setPositiveButton(getString(R.string.dialog_ok), (dialog, which) -> {
-                    // Map selected display labels back to canonical HU by index
                     List<String> selectedHU = new ArrayList<>();
                     for (int i = 0; i < displayOptions.length; i++) {
                         String disp = displayOptions[i];

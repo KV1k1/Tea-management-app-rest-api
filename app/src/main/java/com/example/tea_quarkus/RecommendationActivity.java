@@ -24,8 +24,6 @@ import java.util.Set;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RecommendationActivity extends AppCompatActivity {
 
@@ -35,7 +33,7 @@ public class RecommendationActivity extends AppCompatActivity {
     private ImageView teaProg;
 
     private ArrayList<Tea> teaList = new ArrayList<>();
-    private boolean isEnglish; // cached per activity instance
+    private boolean isEnglish;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +41,6 @@ public class RecommendationActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_recommendation);
 
-        // Edge-to-edge padding
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -91,13 +88,7 @@ public class RecommendationActivity extends AppCompatActivity {
     private void fetchTeasFromBackend() {
         loadingText.setVisibility(View.VISIBLE);
 
-        // Replace with your PC or server IP
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.196:8080/") // <-- your Quarkus backend IP
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        TeaApi teaApi = retrofit.create(TeaApi.class);
+        TeaApi teaApi = ApiClient.getTeaApi();
 
         teaApi.getAllTeas().enqueue(new Callback<List<Tea>>() {
             @Override
@@ -109,7 +100,7 @@ public class RecommendationActivity extends AppCompatActivity {
                     loadBestTea();
                     fadeInRecommendation();
                 } else {
-                    Toast.makeText(RecommendationActivity.this, "Failed to load teas", Toast.LENGTH_SHORT).show();
+                    ApiResponseHandler.handleResponse(RecommendationActivity.this, response);
                 }
             }
 

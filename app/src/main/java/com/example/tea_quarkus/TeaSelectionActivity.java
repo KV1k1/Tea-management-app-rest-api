@@ -25,8 +25,7 @@ import java.util.function.Supplier;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import android.widget.Toast;
 
 public class TeaSelectionActivity extends AppCompatActivity {
 
@@ -63,15 +62,8 @@ public class TeaSelectionActivity extends AppCompatActivity {
         adapter = new TeaAdapter(this, filteredList, this::isEnglishSelected);
         recyclerView.setAdapter(adapter);
 
-        // ✅ Replace with your Quarkus server IP address (important if testing on a device)
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.196:8080/") // example: use your PC's local IP
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        TeaApi teaApi = ApiClient.getTeaApi();
 
-        TeaApi teaApi = retrofit.create(TeaApi.class);
-
-        // Fetch teas from backend
         teaApi.getAllTeas().enqueue(new Callback<List<Tea>>() {
             @Override
             public void onResponse(Call<List<Tea>> call, Response<List<Tea>> response) {
@@ -84,16 +76,18 @@ public class TeaSelectionActivity extends AppCompatActivity {
                     filteredList.clear();
                     filteredList.addAll(teaList);
                     adapter.notifyDataSetChanged();
+                } else {
+                    ApiResponseHandler.handleResponse(TeaSelectionActivity.this, response);
                 }
             }
 
             @Override
             public void onFailure(Call<List<Tea>> call, Throwable t) {
                 t.printStackTrace();
+                Toast.makeText(TeaSelectionActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 
-        // Search setup
         searchView = findViewById(R.id.searchView);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -108,7 +102,7 @@ public class TeaSelectionActivity extends AppCompatActivity {
                 return true;
             }
         });
-        // Sorting buttons
+
         btnSortAZ = findViewById(R.id.btnSortAZ);
         btnSortZA = findViewById(R.id.btnSortZA);
 
@@ -152,7 +146,6 @@ public class TeaSelectionActivity extends AppCompatActivity {
         return isEnglish ? (en.isEmpty() ? hu : en) : hu;
     }
 
-    // RecyclerView Adapter
     static class TeaAdapter extends RecyclerView.Adapter<TeaAdapter.TeaViewHolder> {
         private final Context context;
         private final List<Tea> teas;

@@ -13,8 +13,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -68,13 +66,7 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.196:8080/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        TeaApi authApi = retrofit.create(TeaApi.class);
-
+        TeaApi authApi = ApiClient.getTeaApi();
         RegisterRequest request = new RegisterRequest(loginName, displayName, password, true);
 
         authApi.register(request).enqueue(new Callback<RegisterResponse>() {
@@ -102,15 +94,7 @@ public class RegisterActivity extends AppCompatActivity {
                         Toast.makeText(RegisterActivity.this, "Registration failed", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    String errorMsg = "Registration failed: " + response.message();
-                    if (response.code() == 400) {
-                        errorMsg = "• 8+ characters\n" +
-                                "• Uppercase letter\n" +
-                                "• Lowercase letter\n" +
-                                "• Number\n" +
-                                "• Special character (@#$%^&+=)";
-                    }
-                    Toast.makeText(RegisterActivity.this, errorMsg, Toast.LENGTH_LONG).show();
+                    ApiResponseHandler.handleResponse(RegisterActivity.this, response);
                 }
             }
 

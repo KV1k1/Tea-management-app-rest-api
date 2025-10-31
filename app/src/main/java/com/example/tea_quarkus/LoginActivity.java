@@ -13,8 +13,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -28,7 +26,6 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // Check if user is already logged in
         tokenManager = new TokenManager(this);
         if (tokenManager.isLoggedIn()) {
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
@@ -56,13 +53,7 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.196:8080/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        TeaApi authApi = retrofit.create(TeaApi.class);
-
+        TeaApi authApi = ApiClient.getTeaApi();
         LoginRequest request = new LoginRequest(loginName, password);
 
         authApi.login(request).enqueue(new Callback<LoginResponse>() {
@@ -71,7 +62,6 @@ public class LoginActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     LoginResponse loginResponse = response.body();
                     if (loginResponse.isRetval()) {
-                        // Save token and login name
                         tokenManager.saveToken(loginResponse.getToken(), loginName);
 
                         Toast.makeText(LoginActivity.this, "Login successful!", Toast.LENGTH_SHORT).show();
@@ -81,7 +71,7 @@ public class LoginActivity extends AppCompatActivity {
                         Toast.makeText(LoginActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(LoginActivity.this, "Login failed: " + response.message(), Toast.LENGTH_SHORT).show();
+                    ApiResponseHandler.handleResponse(LoginActivity.this, response);
                 }
             }
 
