@@ -50,9 +50,11 @@
     <string name="choose_tea">Choose a tea</string>
 
 
-    <string name="q_purpose">What effect are you looking for?</string>
-    <string name="q_flavor">What flavor profile are you after?</string>
+    <string name="q_purpose">What effect do you need?</string>
+    <string name="q_flavor">What flavor do you desire?</string>
     <string name="q_daytime">When will you drink it?</string>
+
+    <string name="tea_ker">Searching...</string>
 
     <!-- Display arrays (localized EN) - order must match HU arrays -->
     <string-array name="purpose_options">

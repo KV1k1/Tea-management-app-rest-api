@@ -57,6 +57,8 @@
     <string name="q_flavor">Milyen ízvilágot keresel?</string>
     <string name="q_daytime">Mikor fogod inni?</string>
 
+    <string name="tea_ker">Tea keresése...</string>
+
     <!-- Display arrays (localized) -->
     <string-array name="purpose_options">
         <item>Élénkítő</item>

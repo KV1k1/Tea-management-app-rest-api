@@ -34,7 +34,7 @@ public class QuizActivity extends AppCompatActivity {
 
     private List<Question> questions;
     private int currentQuestionIndex = 0;
-    private Map<String, List<String>> answers = new HashMap<>(); // Multi-selection ready
+    private Map<String, List<String>> answers = new HashMap<>();
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -62,7 +62,6 @@ public class QuizActivity extends AppCompatActivity {
 
         ScrollView scrollView = findViewById(R.id.scrollView);
 
-        // Initialize quiz questions using localized strings and arrays
         questions = new ArrayList<>();
         questions.add(new Question(
                 getString(R.string.q_purpose),
@@ -90,10 +89,8 @@ public class QuizActivity extends AppCompatActivity {
             if (currentQuestionIndex < questions.size()) {
                 animateQuestionChange(() -> showQuestion(currentQuestionIndex));
             } else {
-                // Finish quiz: map selections (localized) -> canonical HU before passing
                 Intent i = new Intent(QuizActivity.this, RecommendationActivity.class);
 
-                // Map each category
                 ArrayList<String> purposeHU = mapSelectionsToHu("purpose", answers.get("purpose"));
                 ArrayList<String> flavorHU = mapSelectionsToHu("flavor", answers.get("flavor"));
                 ArrayList<String> dayTimeHU = mapSelectionsToHu("dayTime", answers.get("dayTime"));
@@ -120,16 +117,14 @@ public class QuizActivity extends AppCompatActivity {
         optionsContainer.removeAllViews();
         nextButton.setEnabled(false);
 
-        boolean isMultiSelect = index < 2; // First two questions allow 1–3 choices
+        boolean isMultiSelect = index < 2;
 
         if (isMultiSelect) {
-            // Fade in the "max 3 options" label
             opcio3.setVisibility(View.VISIBLE);
             AlphaAnimation fadeInOpcio = new AlphaAnimation(0, 1);
             fadeInOpcio.setDuration(400);
             opcio3.startAnimation(fadeInOpcio);
         } else {
-            // Fade out when moving to last question
             if (opcio3.getVisibility() == View.VISIBLE) {
                 AlphaAnimation fadeOutOpcio = new AlphaAnimation(1, 0);
                 fadeOutOpcio.setDuration(300);
@@ -171,9 +166,7 @@ public class QuizActivity extends AppCompatActivity {
                 List<String> selectedOptions = answers.getOrDefault(q.getType(), new ArrayList<>());
 
                 if (isMultiSelect) {
-                    // MULTI-SELECTION MODE (1–3)
                     if (selectedOptions.contains(option)) {
-                        // Deselect
                         selectedOptions.remove(option);
                         drawable.setColor(getResources().getColor(android.R.color.white));
                     } else {
@@ -191,7 +184,6 @@ public class QuizActivity extends AppCompatActivity {
                     nextButton.setEnabled(!selectedOptions.isEmpty());
 
                 } else {
-                    // SINGLE SELECTION MODE
                     selectedOptions.clear();
                     selectedOptions.add(option);
                     answers.put(q.getType(), selectedOptions);
@@ -206,7 +198,6 @@ public class QuizActivity extends AppCompatActivity {
                     drawable.setColor(getResources().getColor(R.color.salmon));
                 }
 
-                // Update visual state of all buttons
                 for (int i = 0; i < optionsContainer.getChildCount(); i++) {
                     Button b = (Button) optionsContainer.getChildAt(i);
                     GradientDrawable bg = (GradientDrawable) b.getBackground();
@@ -227,7 +218,6 @@ public class QuizActivity extends AppCompatActivity {
             optionsContainer.addView(btn);
         }
 
-        // Animate question text
         AlphaAnimation fadeIn = new AlphaAnimation(0, 1);
         fadeIn.setDuration(400);
         questionText.startAnimation(fadeIn);

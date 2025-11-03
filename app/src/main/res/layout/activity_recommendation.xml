@@ -20,7 +20,7 @@
             android:id="@+id/loadingText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tea keresése..."
+            android:text="@string/tea_ker"
             android:textSize="18sp"
             android:textColor="@android:color/black"
             android:layout_marginBottom="20dp"/>
